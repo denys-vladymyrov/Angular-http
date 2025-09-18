@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+
+import { AvailablePlacesComponent } from './places/available-places/available-places.component';
+import { UserPlacesComponent } from './places/user-places/user-places.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  imports: [AvailablePlacesComponent, UserPlacesComponent],
 })
-export class App {
-  protected readonly title = signal('http');
-}
+export class AppComponent {}
