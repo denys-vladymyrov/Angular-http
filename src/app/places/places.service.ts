@@ -44,15 +44,30 @@ export class PlacesService {
     )
   }
 
-  removeUserPlace(place: Place) {}
+  removeUserPlace(place: Place) {
+    const prevPlaces = this.userPlaces();
+
+    this.userPlaces.update((prevPlaces) => prevPlaces.filter((p) => p.id !== place.id));
+
+    return this.httpClient.delete(`http://localhost:3000/user-places/${place.id}`)
+      .pipe(
+        catchError(() => {
+          this.userPlaces.set(prevPlaces);
+          this.errorService.showError('Failed to delete favorite place.');
+          return throwError(() => new Error('Failed to delete favorite place.'));
+        })
+      )
+  }
 
   private fetchPlaces(url: string, errorMessage: string) {
     return this.httpClient
       .get<{places: Place[]}>(url)
       .pipe(
         map((resData) => resData.places),
-        catchError((error: Error) =>
-          throwError(() => new Error(errorMessage))),
-      )
+        catchError(() => {
+          this.errorService.showError(errorMessage);
+          return throwError(() => new Error(errorMessage));
+        })
+      );
   }
 }
