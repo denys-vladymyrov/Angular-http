@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import cors from 'cors';
 
 import bodyParser from "body-parser";
 import express from "express";
@@ -91,10 +92,15 @@ app.delete("/user-places/:id", async (req, res) => {
 
 // 404
 app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-DEBUG");
+
   if (req.method === "OPTIONS") {
-    return next();
+    return res.sendStatus(200);
   }
-  res.status(404).json({ message: "404 - Not Found" });
+
+  next();
 });
 
 app.listen(3000);
